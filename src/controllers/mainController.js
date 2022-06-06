@@ -11,7 +11,7 @@ const controller = {
 		let visitedProducts = products.filter( prod => { 
 			return prod.category == "visited" 
 		})
-		console.log(visitedProducts)
+
 		let inSaleProducts = products.filter(prod => { 
 			return prod.category == "in-sale" 
 		})
