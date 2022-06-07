@@ -1,24 +1,39 @@
 // ************ Require's ************
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 
 // ************ Controller Require ************
 const productsController = require('../controllers/productsController');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        console.log(path.join(__dirname, "../../public/images/products"))
+        cb(null, path.join(__dirname, "../../public/images/products"));
+    }, 
+    filename: function (req, file, cb) {
+        let imageName = Date.now() + "-" + "" + path.extname(file.originalname);
+        cb(null, imageName);
+    }  
+})
+
+const upload = multer({storage});
 
 /*** GET ALL PRODUCTS ***/ 
  router.get('/', productsController.index); 
 
 /*** CREATE ONE PRODUCT ***/ 
-// router.???('/???/', productsController.create); 
-// router.???('/', productsController.store); 
+router.get('/create/', productsController.create); 
+router.post('/', upload.single('image'), productsController.store);
 
 
 /*** GET ONE PRODUCT ***/ 
-router.get('/:id/', productsController.detail); 
+router.get('/detail/:id/', productsController.detail); 
 
 /*** EDIT ONE PRODUCT ***/ 
-// router.???('/:id/???', productsController.edit); 
-// router.???('/:id', productsController.update); 
+router.get('/edit/:id/', productsController.edit); 
+router.put('/edit/:id/', productsController.update); 
 
 
 /*** DELETE ONE PRODUCT***/ 

@@ -1,3 +1,5 @@
+const { privateDecrypt } = require('crypto');
+const { redirect } = require('express/lib/response');
 const fs = require('fs');
 const path = require('path');
 
@@ -22,21 +24,36 @@ const controller = {
 
 	// Create - Form to create
 	create: (req, res) => {
-		// Do the magic
+		return res.render('product-create-form');
 	},
 	
 	// Create -  Method to store
 	store: (req, res) => {
-		// Do the magic
+			console.log(req)
+		var newProduct = {
+		id: products.length+1,
+		name: req.body.name,
+		description: req.body.description,
+		price: req.body.price,
+		discount: req.body.discount,
+		image: req.file.filename,
+		category: req.body.category,
+		}
+		
+		products.push(newProduct);
+		fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2));
+
+		res.redirect('/products');
 	},
 
 	// Update - Form to edit
 	edit: (req, res) => {
-		// Do the magic
+		let productToEdit = products.filter(prod => {return prod.id == req.params.id}); 
+		res.render('product-edit-form', { productToEdit: productToEdit[0] })
 	},
 	// Update - Method to update
 	update: (req, res) => {
-		// Do the magic
+		
 	},
 
 	// Delete - Delete one product from DB
